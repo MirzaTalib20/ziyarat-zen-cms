@@ -6,7 +6,17 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { Home } from './pages/public/Home';
+import { About } from './pages/public/About';
+import { Gallery } from './pages/public/Gallery';
+import { Packages } from './pages/public/Packages';
+import { Contact } from './pages/public/Contact';
+import { Login } from './pages/auth/Login';
 import { HomeEditor } from './pages/cms/HomeEditor';
+import { AboutEditor } from './pages/cms/AboutEditor';
+import { GalleryEditor } from './pages/cms/GalleryEditor';
+import { PackagesEditor } from './pages/cms/PackagesEditor';
+import { ContactEditor } from './pages/cms/ContactEditor';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,10 +31,21 @@ const App = () => (
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/packages" element={<Packages />} />
+            <Route path="/contact" element={<Contact />} />
             
-            {/* CMS Routes */}
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            
+            {/* CMS Routes - Protected */}
             <Route path="/cms" element={<Navigate to="/cms/pages" replace />} />
-            <Route path="/cms/pages" element={<HomeEditor />} />
+            <Route path="/cms/pages" element={<ProtectedRoute requireAdmin><HomeEditor /></ProtectedRoute>} />
+            <Route path="/cms/about" element={<ProtectedRoute requireAdmin><AboutEditor /></ProtectedRoute>} />
+            <Route path="/cms/gallery" element={<ProtectedRoute requireAdmin><GalleryEditor /></ProtectedRoute>} />
+            <Route path="/cms/packages" element={<ProtectedRoute requireAdmin><PackagesEditor /></ProtectedRoute>} />
+            <Route path="/cms/contact" element={<ProtectedRoute requireAdmin><ContactEditor /></ProtectedRoute>} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

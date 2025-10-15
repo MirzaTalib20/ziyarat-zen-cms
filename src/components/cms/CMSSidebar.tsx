@@ -10,10 +10,11 @@ import {
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/cms' },
-  { icon: FileText, label: 'Pages', path: '/cms/pages' },
+  { icon: FileText, label: 'Home Page', path: '/cms/pages' },
+  { icon: FileText, label: 'About Page', path: '/cms/about' },
   { icon: Package, label: 'Packages', path: '/cms/packages' },
   { icon: Image, label: 'Gallery', path: '/cms/gallery' },
-  { icon: MessageSquare, label: 'Testimonials', path: '/cms/testimonials' },
+  { icon: MessageSquare, label: 'Contact', path: '/cms/contact' },
   { icon: Settings, label: 'Settings', path: '/cms/settings' },
 ];
 
