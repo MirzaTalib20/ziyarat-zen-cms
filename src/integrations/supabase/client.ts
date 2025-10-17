@@ -2,15 +2,20 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+// No need for dotenv, Next.js handles this automatically.
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL!;
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY!;
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
+// Ensure you have a .env.local file with these variables:
+// NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+// NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
-    storage: localStorage,
+    // These options are correct for a browser environment.
+    // However, this code will fail during Server-Side Rendering (SSR)
+    // because `localStorage` is not available on the server.
+    storage: typeof window !== 'undefined' ? localStorage : undefined,
     persistSession: true,
     autoRefreshToken: true,
   }

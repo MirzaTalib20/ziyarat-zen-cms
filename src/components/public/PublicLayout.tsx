@@ -1,7 +1,9 @@
-import { ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
+import { ReactNode, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { Menu, X } from "lucide-react"; // Icons
+import logo from "@/assets/logo/logo.png";
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -10,24 +12,29 @@ interface PublicLayoutProps {
 export const PublicLayout = ({ children }: PublicLayoutProps) => {
   const location = useLocation();
   const navItems = useSelector((state: RootState) => state.navigation.items);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation */}
+      {/* Navbar */}
       <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center">
-                <span className="text-white text-lg font-bold">Z</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center">
+                <img
+                  src={logo}
+                  alt="Ar-Rahman Logo"
+                  className="w-14 h-14 object-contain"
+                />
               </div>
               <span className="text-xl font-serif font-bold text-foreground">
-                Ziyarat Tours
+                Ar-Rahman Tours
               </span>
             </Link>
 
-            {/* Nav Items */}
+            {/* Desktop Nav Items */}
             <div className="hidden md:flex items-center gap-8">
               {navItems.map((item) => {
                 const isActive = location.pathname === item.url;
@@ -36,17 +43,17 @@ export const PublicLayout = ({ children }: PublicLayoutProps) => {
                     key={item.id}
                     to={item.url}
                     className={`
-                      text-sm font-medium transition-smooth relative
-                      ${isActive 
-                        ? 'text-primary' 
-                        : 'text-foreground hover:text-primary'
-                      }
+                      text-sm font-medium transition-all relative
+                      ${isActive
+                        ? "text-primary"
+                        : "text-foreground hover:text-primary"}
                       after:content-[''] after:absolute after:w-full after:h-0.5 
                       after:bg-primary after:bottom-[-4px] after:left-0 
                       after:transition-transform after:origin-bottom-right
-                      ${isActive 
-                        ? 'after:scale-x-100' 
-                        : 'after:scale-x-0 hover:after:scale-x-100 hover:after:origin-bottom-left'
+                      ${
+                        isActive
+                          ? "after:scale-x-100"
+                          : "after:scale-x-0 hover:after:scale-x-100 hover:after:origin-bottom-left"
                       }
                     `}
                   >
@@ -55,14 +62,50 @@ export const PublicLayout = ({ children }: PublicLayoutProps) => {
                 );
               })}
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2 rounded-lg hover:bg-accent transition"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? (
+                <X className="w-6 h-6 text-foreground" />
+              ) : (
+                <Menu className="w-6 h-6 text-foreground" />
+              )}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        {menuOpen && (
+          <div className="md:hidden bg-card border-t border-border px-6 pb-4 animate-fadeIn">
+            <ul className="flex flex-col gap-3 mt-2">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.url;
+                return (
+                  <li key={item.id}>
+                    <Link
+                      to={item.url}
+                      onClick={() => setMenuOpen(false)}
+                      className={`block py-2 text-sm font-medium transition-all ${
+                        isActive
+                          ? "text-primary"
+                          : "text-foreground hover:text-primary"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1">
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
 
       {/* Footer */}
       <footer className="bg-secondary text-secondary-foreground py-12">
@@ -74,10 +117,13 @@ export const PublicLayout = ({ children }: PublicLayoutProps) => {
                 <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center">
                   <span className="text-white text-lg font-bold">Z</span>
                 </div>
-                <span className="text-xl font-serif font-bold">Ziyarat Tours</span>
+                <span className="text-xl font-serif font-bold">
+                  Ar-Rahman Tours
+                </span>
               </div>
               <p className="text-sm opacity-80">
-                Providing spiritual journeys to sacred sites with care and reverence since 2010.
+                Providing spiritual journeys to sacred sites with care and
+                reverence since 2008.
               </p>
             </div>
 
@@ -87,7 +133,7 @@ export const PublicLayout = ({ children }: PublicLayoutProps) => {
               <ul className="space-y-2">
                 {navItems.map((item) => (
                   <li key={item.id}>
-                    <Link 
+                    <Link
                       to={item.url}
                       className="text-sm opacity-80 hover:opacity-100 hover:text-primary transition-smooth"
                     >
@@ -102,15 +148,15 @@ export const PublicLayout = ({ children }: PublicLayoutProps) => {
             <div>
               <h3 className="font-semibold mb-4">Contact Us</h3>
               <ul className="space-y-2 text-sm opacity-80">
-                <li>Email: info@ziyarattours.com</li>
-                <li>Phone: +1 (555) 123-4567</li>
+                <li>Email: maulanaatahaider@gmail.com</li>
+                <li>Phone: +91 98198 37579</li>
                 <li>WhatsApp: +1 (555) 987-6543</li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-secondary-foreground/20 mt-8 pt-8 text-center text-sm opacity-60">
-            © {new Date().getFullYear()} Ziyarat Tours. All rights reserved.
+            © {new Date().getFullYear()} Ar-Rahman Tours. All rights reserved.
           </div>
         </div>
       </footer>
