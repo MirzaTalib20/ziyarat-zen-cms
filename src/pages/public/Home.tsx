@@ -44,7 +44,7 @@ export const Home = () => {
     const fetchPackages = async () => {
       const { data, error } = await supabase
         .from("packages")
-        .select("*");
+        .select("*").eq("featured", true);
       if (error) {
         setError(error);
         return;
@@ -72,7 +72,7 @@ setLoading(false);
     {
       loop: true,
       align: "start",
-      skipSnaps: false,
+      skipSnaps: true,
     },
     [Autoplay({ delay: 4000, stopOnInteraction: false })]
   );
@@ -87,6 +87,7 @@ setLoading(false);
   return (
     <PublicLayout>
        {/* Hero Section */}
+       <div className="">
       <section className="relative flex items-center justify-center min-h-screen text-center bg-cover bg-center text-white overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center z-0"
@@ -189,7 +190,7 @@ setLoading(false);
 
                     <div className="flex items-center justify-between pt-4">
                       <p className="text-xl font-bold text-yellow-600">
-                        ${pkg.price}
+                        ₹{pkg.price}
                       </p>
                       <Button className="gradient-primary text-white rounded-full px-5 py-2 text-sm shadow-md">
                         Book Now
@@ -262,7 +263,7 @@ setLoading(false);
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="flex-[0_0_calc(100%_-_1rem)] sm:flex-[0_0_calc(50%_-_1rem)] lg:flex-[0_0_calc(33.333%_-_1rem)]"
+                className="flex-[0_0_100%] sm:flex-[0_0_calc(50%-1rem)] lg:flex-[0_0_calc(35%-1rem)] snap-center p-2"
               >
                 <Card className="p-6 shadow-soft h-full flex flex-col justify-between">
                   <div>
@@ -298,7 +299,7 @@ setLoading(false);
         </div>
       </div>
     </section>
-     
+     </div>
          {" "}
     </PublicLayout>
   );

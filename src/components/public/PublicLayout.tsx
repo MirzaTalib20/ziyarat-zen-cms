@@ -108,58 +108,86 @@ export const PublicLayout = ({ children }: PublicLayoutProps) => {
       <main className="flex-1">{children}</main>
 
       {/* Footer */}
-      <footer className="bg-secondary text-secondary-foreground py-12">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Logo & Description */}
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center">
-                  <span className="text-white text-lg font-bold">Z</span>
-                </div>
-                <span className="text-xl font-serif font-bold">
-                  Ar-Rahman Tours
-                </span>
-              </div>
-              <p className="text-sm opacity-80">
-                Providing spiritual journeys to sacred sites with care and
-                reverence since 2008.
-              </p>
-            </div>
-
-            {/* Quick Links */}
-            <div>
-              <h3 className="font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
-                {navItems.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      to={item.url}
-                      className="text-sm opacity-80 hover:opacity-100 hover:text-primary transition-smooth"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Contact Info */}
-            <div>
-              <h3 className="font-semibold mb-4">Contact Us</h3>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li>Email: maulanaatahaider@gmail.com</li>
-                <li>Phone: +91 98198 37579</li>
-                <li>WhatsApp: +1 (555) 987-6543</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-secondary-foreground/20 mt-8 pt-8 text-center text-sm opacity-60">
-            © {new Date().getFullYear()} Ar-Rahman Tours. All rights reserved.
-          </div>
+    {/* Footer */}
+<footer className="bg-secondary text-secondary-foreground  py-12">
+  <div className="container mx-auto px-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+      {/* Logo & Description */}
+      <div className="flex flex-col items-center md:items-start text-center md:text-left">
+        <div className="flex items-center gap-2 mb-4">
+          <img
+            src={logo}
+            alt="Ar-Rahman Tours Logo"
+            className="w-14 h-14 object-contain rounded-full border border-[#c2a25e] p-1 bg-white"
+          />
+          <span className="text-2xl font-serif font-bold text-[#c2a25e]">
+            Ar-Rahman Tours
+          </span>
         </div>
-      </footer>
+        <p className="text-sm text-white-400 max-w-xs leading-relaxed">
+          Providing spiritual journeys to sacred sites with care and reverence since 2008.
+        </p>
+      </div>
+
+      {/* Quick Links */}
+      <div className="text-center md:text-left">
+        <h3 className="font-semibold text-lg mb-4 text-[#c2a25e]">
+          Quick Links
+        </h3>
+        <ul className="space-y-2">
+          {navItems.map((item) => (
+            <li key={item.id}>
+              <Link
+                to={item.url}
+                className="text-sm text-white-300 hover:text-white transition-colors"
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Contact & Social */}
+      <div className="text-center md:text-left">
+        <h3 className="font-semibold text-lg mb-4 text-[#c2a25e]">
+          Contact Us
+        </h3>
+        <ul className="space-y-2 text-sm text-white-400 mb-4">
+          <li>Email: <a href="mailto:maulanaatahaider@gmail.com" className="hover:text-[#c2a25e]">maulanaatahaider@gmail.com</a></li>
+          <li>Phone: <a href="tel:+919819837579" className="hover:text-[#c2a25e]">+91 98198 37579</a></li>
+          <li>WhatsApp: <a href="https://wa.me/919819837579" target="_blank" className="hover:text-[#c2a25e]">Chat with us</a></li>
+        </ul>
+
+        {/* Social Media Icons */}
+        <div className="flex justify-center md:justify-start gap-4">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+             className="w-9 h-9 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition">
+            <i className="fab fa-facebook-f text-[#c2a25e] hover:text-white"></i>
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+             className="w-9 h-9 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition">
+            <i className="fab fa-instagram text-[#c2a25e] hover:text-white"></i>
+          </a>
+          <a href="https://wa.me/919819837579" target="_blank" rel="noopener noreferrer"
+             className="w-9 h-9 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition">
+            <i className="fab fa-whatsapp text-[#c2a25e] hover:text-white"></i>
+          </a>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer"
+             className="w-9 h-9 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition">
+            <i className="fab fa-youtube text-[#c2a25e] hover:text-white"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {/* Bottom Bar */}
+    <div className="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-white-500">
+      © {new Date().getFullYear()} Ar-Rahman Tours. All rights reserved.
+    </div>
+  </div>
+</footer>
+
     </div>
   );
 };
