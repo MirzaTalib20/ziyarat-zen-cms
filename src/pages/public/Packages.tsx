@@ -14,11 +14,12 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import { Link } from "react-router-dom";
 
 type ZiyaratPackage = Tables<"packages">;
 
 export const Packages = () => {
-  const [packages, setPackages] = useState<ZiyaratPackage[]>([]);
+    const [packages, setPackages] = useState<ZiyaratPackage[]>([]);
   const [filtered, setFiltered] = useState<ZiyaratPackage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,6 +29,26 @@ export const Packages = () => {
   const [duration, setDuration] = useState<string>("all");
   const [maxPrice, setMaxPrice] = useState<string>("");
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 6;
+
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginatedPackages = filtered.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  
+
+  // --- Fetch Packages ---
   useEffect(() => {
     const fetchPackages = async () => {
       setLoading(true);
@@ -35,6 +56,7 @@ export const Packages = () => {
       if (error) {
         setError(error.message);
         setPackages([]);
+        setFiltered([]);
       } else if (data) {
         setPackages(data as ZiyaratPackage[]);
         setFiltered(data as ZiyaratPackage[]);
@@ -44,9 +66,10 @@ export const Packages = () => {
     fetchPackages();
   }, []);
 
-  // Filter logic
+  // --- Filter Logic ---
   useEffect(() => {
     let filteredList = [...packages];
+
     if (destination !== "all") {
       filteredList = filteredList.filter(
         (pkg) =>
@@ -54,16 +77,20 @@ export const Packages = () => {
           pkg.title?.toLowerCase().includes(destination.toLowerCase())
       );
     }
+
     if (duration !== "all") {
       filteredList = filteredList.filter((pkg) =>
         pkg.duration?.toLowerCase().includes(duration.toLowerCase())
       );
     }
+
     if (maxPrice) {
       const max = parseFloat(maxPrice);
       filteredList = filteredList.filter((pkg) => pkg.price <= max);
     }
+
     setFiltered(filteredList);
+    setCurrentPage(1); // reset page
   }, [destination, duration, maxPrice, packages]);
 
   // Loading / Error states
@@ -140,110 +167,168 @@ export const Packages = () => {
 
 
       {/* Main Section */}
-      <section className="bg-[#fbf7f1] py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Filters */}
-          <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm mb-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Select value={destination} onValueChange={setDestination}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by destination" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Destinations</SelectItem>
-                <SelectItem value="iran">Iran</SelectItem>
-                <SelectItem value="iraq">Iraq</SelectItem>
-                <SelectItem value="syria">Syria</SelectItem>
-              </SelectContent>
-            </Select>
+   <section className="bg-[#fbf7f1] py-16">
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Filters */}
+        <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm mb-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Select value={destination} onValueChange={setDestination}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by destination" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Destinations</SelectItem>
+              <SelectItem value="iran">Iran</SelectItem>
+              <SelectItem value="iraq">Iraq</SelectItem>
+              <SelectItem value="syria">Syria</SelectItem>
+            </SelectContent>
+          </Select>
 
-            <Select value={duration} onValueChange={setDuration}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by duration" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Durations</SelectItem>
-                <SelectItem value="7 days">7 Days</SelectItem>
-                <SelectItem value="10 days">10 Days</SelectItem>
-                <SelectItem value="15 days">15 Days</SelectItem>
-              </SelectContent>
-            </Select>
+          <Select value={duration} onValueChange={setDuration}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by duration" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Durations</SelectItem>
+              <SelectItem value="7 days">7 Days</SelectItem>
+              <SelectItem value="10 days">10 Days</SelectItem>
+              <SelectItem value="15 days">15 Days</SelectItem>
+            </SelectContent>
+          </Select>
 
-            <Input
-              type="number"
-              placeholder="Max Price"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-            />
-          </div>
-
-          {/* Packages Grid */}
-          <h2 className="text-2xl font-semibold text-slate-800 mb-6 text-center">
-            Our Ziyarat Packages
-          </h2>
-        {filtered.length > 0 ? (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-    {filtered.map((pkg) => (
-      <Card
-        key={pkg._id}
-        className="overflow-hidden bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col"
-      >
-        {/* Image */}
-        <div className="relative aspect-[16/9]">
-  <img
-    src={pkg.imageUrl || "/placeholder.jpg"}
-    alt={pkg.title}
-    className="w-full h-full object-cover"
-  />
-</div>
-
-
-        {/* Content */}
-        <div className="p-5 flex flex-col flex-1">
-          <h3 className="text-lg font-semibold text-slate-800 line-clamp-2">
-            {pkg.title}
-          </h3>
-          <p className="text-sm text-slate-500 mt-1">
-            {pkg.category} • {pkg.duration}
-          </p>
-          <p className="text-[#c2a25e] font-semibold text-lg mt-3">
-            ₹{pkg.price.toLocaleString()}
-          </p>
-          <div className="mt-auto flex justify-end">
-            <Button className="bg-[#c2a25e] hover:bg-[#b3904e] text-white rounded-full px-6 py-2">
-              Book Now
-            </Button>
-          </div>
+          <Input
+            type="number"
+            placeholder="Max Price"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+          />
         </div>
-      </Card>
-    ))}
-  </div>
-) : (
-  <p className="text-center text-slate-500 mt-8">
-    No packages found for selected filters.
-  </p>
-)}
 
-          {/* What's Included Section */}
-          <div className="mt-20">
-            <h3 className="text-xl font-semibold text-slate-800 mb-6 text-center">
-              What’s Included
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {features.map((f) => (
+        {/* Packages List */}
+        {loading ? (
+          <p className="text-center text-gray-500">Loading packages...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : filtered.length === 0 ? (
+          <p className="text-center text-gray-500 mt-8">
+            No packages found for selected filters.
+          </p>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {paginatedPackages.map((pkg) => (
                 <div
-                  key={f.id}
-                  className="flex items-center gap-4 bg-white p-4 rounded-lg shadow-sm"
+                  key={pkg._id}
+                  className="bg-white flex-[0_0_100%] 
+                  sm:flex-[0_0_45%] 
+                  md:flex-[0_0_30%] 
+                  bg-white 
+                  rounded-3xl 
+                  shadow-[0_8px_30px_rgb(0,0,0,0.08)] 
+                  hover:shadow-[0_8px_40px_rgb(0,0,0,0.12)] 
+                  transition-all 
+                  duration-300 
+                  overflow-hidden 
+                  p-4 "
                 >
-                  <div className="text-3xl bg-[#f6efe1] w-12 h-12 flex items-center justify-center rounded-full">
-                    {f.icon}
+                  {/* Image */}
+                  <div className="relative">
+                    <img
+                      src={pkg.imageUrl || "/placeholder.jpg"}
+                      alt={pkg.title}
+                      className="w-full h-48 object-cover rounded-2xl"
+                    />
+                    <button className="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5 text-primary-600"
+                      >
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1.01 4.13 2.44C11.09 5.01 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      </svg>
+                    </button>
                   </div>
-                  <p className="text-slate-700 font-medium">{f.title}</p>
+
+                  {/* Content */}
+                  <div className="p-4 flex flex-col flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
+                      {pkg.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-2 line-clamp-1">
+                      {pkg.location} • {pkg.duration}
+                    </p>
+
+                    <div className="flex justify-between items-center mb-4">
+                      <div>
+                        <p className="text-xs text-gray-400">Start from</p>
+                        <p className="text-lg font-bold text-gray-800">
+                          ₹{pkg.price.toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded-full font-medium">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                          className="w-4 h-4"
+                        >
+                          <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.781 1.4 8.172L12 18.897l-7.334 3.866 1.4-8.172L.132 9.21l8.2-1.192z" />
+                        </svg>
+                        4.9
+                      </div>
+                    </div>
+
+                    <Link to={`/packages/${pkg._id}`}>
+                      <Button className="w-full text-white text-sm font-medium py-2 bg-gradient-to-br from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 rounded-full shadow-md transition">
+                        View Details
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-10 gap-2">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  className={`px-4 py-2 rounded-full border ${
+                    currentPage === i + 1
+                      ? "bg-yellow-500 text-white"
+                      : "bg-white text-gray-700"
+                  }`}
+                  onClick={() => goToPage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* What's Included Section */}
+        <div className="mt-20">
+          <h3 className="text-xl font-semibold text-slate-800 mb-6 text-center">
+            What’s Included
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {features.map((f) => (
+              <div
+                key={f.id}
+                className="flex items-center gap-4 bg-white p-4 rounded-lg shadow-sm"
+              >
+                <div className="text-3xl bg-[#f6efe1] w-12 h-12 flex items-center justify-center rounded-full">
+                  {f.icon}
+                </div>
+                <p className="text-slate-700 font-medium">{f.title}</p>
+              </div>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+
 
       {/* Inline Theme */}
       

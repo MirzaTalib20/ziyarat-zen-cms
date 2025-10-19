@@ -18,6 +18,8 @@ import { PackagesEditor } from './pages/cms/PackagesEditor';
 import { ContactEditor } from './pages/cms/ContactEditor';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import NotFound from "./pages/NotFound";
+import ScrollToTop from "./components/ui/ScrollToTop";
+import PackageDetails from "./pages/public/PackageDetails";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+         <ScrollToTop />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
@@ -35,6 +38,7 @@ const App = () => (
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/packages" element={<Packages />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/packageDetails/:id" element={<PackageDetails />} />
             
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />

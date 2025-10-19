@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState,useRef  } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { PublicLayout } from "@/components/public/PublicLayout";
@@ -8,7 +8,6 @@ import { Card } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import heroImage from "@/assets/hero-shrine.jpg";
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, MessageCircle } from "lucide-react";
 import about_circle from "@/assets/about/about-circle.png";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types"; // ← adjust the path if needed
@@ -24,14 +23,15 @@ const mashhadImage =
   "https://images.unsplash.com/photo-1582883901363-2489c6d3663a?q=80&w=1974&auto=format&fit=crop";
 
 
-const destinations = [
-  { name: "Karbala", image: karbalaImage },
-  { name: "Najaf", image: najafImage },
-  { name: "Mashhad", image: mashhadImage },
-];
 
 export const Home = () => {
-  const hero = useSelector((state: RootState) => state.home.hero);
+  const targetSectionRef = useRef<HTMLDivElement>(null);
+
+  const scrollToSection = () => {
+    if (targetSectionRef.current) {
+      targetSectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   const testimonials = useSelector(
     (state: RootState) => state.home.testimonials
   );
@@ -74,7 +74,7 @@ setLoading(false);
       align: "start",
       skipSnaps: true,
     },
-    [Autoplay({ delay: 4000, stopOnInteraction: false })]
+    [Autoplay({ delay: 3000, stopOnInteraction: false })]
   );
    const [destinationemblaRef] = useEmblaCarousel(
     {
@@ -82,8 +82,26 @@ setLoading(false);
       align: "start",
       skipSnaps: false,
     },
-    [Autoplay({ delay: 4000, stopOnInteraction: false })]
+    [Autoplay({ delay: 3000, stopOnInteraction: false })]
   );
+
+  const [packagesemblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start", skipSnaps: false },
+    [Autoplay({ delay: 3000, stopOnInteraction: false })]
+  );
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("select", onSelect);
+    onSelect();
+  }, [emblaApi, onSelect]);
   return (
     <PublicLayout>
        {/* Hero Section */}
@@ -104,7 +122,7 @@ setLoading(false);
           </p>
           <div className="flex flex-col md:flex-row gap-4 mt-6 justify-center animate-fade-in">
             <Button
-              size="lg"
+              size="lg" onClick={scrollToSection}
               className="bg-yellow-500 hover:bg-yellow-600 text-white mb-4 py-3 px-8 rounded-full shadow-lg transition-all"
             >
               View Packages
@@ -154,55 +172,126 @@ setLoading(false);
         </div>
       </section>
       {/* Packages Preview */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-serif font-bold mb-4 text-gray-800">
-              Popular Ziyarat Packages
-            </h2>
-              <h6 className="text-xl md:text-1xl font-sans font-bold text-gray-600 dir-rtl">
-             پاپولر زیارت پاکگریس </h6>
-           
-          </div>
-          {loading ? (
-            <p className="text-center text-muted-foreground">
-              Loading packages...
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {packages.map((pkg) => (
-                <Card
-                  key={pkg._id}
-                  className="overflow-hidden shadow-lg hover:shadow-xl transition-transform duration-300 group rounded-xl border border-muted bg-white"
-                >
-                  <img
-                    src={pkg.imageUrl}
-                    alt={pkg.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="p-6 space-y-4">
-                    <h3 className="text-2xl font-serif font-semibold text-primary">
-                      {pkg.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {pkg.location}
-                    </p>
+       <section ref={targetSectionRef} className="py-20 bg-background">
+      <div className="container mx-auto px-4 sm:px-6">
+        {/* Title */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-serif font-bold mb-4 text-gray-800">
+            Popular Ziyarat Packages
+          </h2>
+          <h6 className="text-xl md:text-lg font-sans font-bold text-gray-600 dir-rtl">
+            پاپولر زیارت پیکیجز
+          </h6>
+        </div>
 
-                    <div className="flex items-center justify-between pt-4">
-                      <p className="text-xl font-bold text-yellow-600">
-                        ₹{pkg.price}
+        {/* Carousel */}
+        <div className="" ref={packagesemblaRef}>
+          <div className="flex gap-5 sm:gap-6">
+            {packages.map((pkg) => (
+              <div
+                key={pkg._id}
+                className="
+                  flex-[0_0_100%] 
+                  sm:flex-[0_0_45%] 
+                  md:flex-[0_0_30%] 
+                  bg-white 
+                  rounded-3xl 
+                  shadow-[0_8px_30px_rgb(0,0,0,0.08)] 
+                  hover:shadow-[0_8px_40px_rgb(0,0,0,0.12)] 
+                  transition-all 
+                  duration-300 
+                  overflow-hidden 
+                  p-4
+                "
+              >
+                {/* Image */}
+                <div className="relative">
+                  <img
+                    src={pkg.imageUrl || "/placeholder.jpg"}
+                    alt={pkg.title}
+                    className="w-full h-44 sm:h-48 md:h-52 object-cover rounded-2xl"
+                  />
+                  {/* Heart Icon */}
+                  <button className="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      className="w-5 h-5 text-primary-600"
+                    >
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1.01 4.13 2.44C11.09 5.01 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Text Content */}
+                <div className="p-4">
+                  <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-1">
+                    {pkg.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-3 line-clamp-1">
+                    {pkg.location}
+                  </p>
+
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <p className="text-xs text-gray-400">Start from</p>
+                      <p className="text-lg font-bold text-gray-800">
+                        ₹{pkg.price.toLocaleString()}
                       </p>
-                      <Button className="gradient-primary text-white rounded-full px-5 py-2 text-sm shadow-md">
-                        Book Now
-                      </Button>
+                    </div>
+                    <div className="flex items-center gap-1 bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded-full font-medium">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        className="w-4 h-4"
+                      >
+                        <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.781 1.4 8.172L12 18.897l-7.334 3.866 1.4-8.172L.132 9.21l8.2-1.192z" />
+                      </svg>
+                      { "4.9"}
                     </div>
                   </div>
-                </Card>
-              ))}
-            </div>
-          )}
+
+                  <Link to={`/packageDetails/${pkg._id}`}>
+                    <button className="w-full btext-white text-sm font-medium py-2 bg-gradient-to-br mt-4 from-yellow-500 to-amber-600 text-white rounded-full shadow-lg hover:shadow-xl hover:from-yellow-600 hover:to-amber-700 transition-all rounded-full shadow-md transition">
+                      View Details
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </section>
+          <div className="text-center mt-10">
+   <Link to="/packages">
+  <button className="
+    px-6 py-3
+    bg-gradient-to-r from-gray-800 via-gray-700 to-gray-600
+    text-white
+    font-semibold
+    rounded-full
+    shadow-lg
+    hover:shadow-2xl
+    hover:scale-105
+    transition-all
+    duration-300
+    relative
+    overflow-hidden
+  ">
+    View All Packages
+    {/* Optional subtle shine */}
+    <span className="
+      absolute top-0 left-0 w-0 h-full bg-white/10 
+      hover:w-full transition-all duration-500
+    "></span>
+  </button>
+</Link>
+
+
+    </div>
+      </div>
+    </section>
     <section className="bg-white py-20 md:py-28">
   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
     <div className="text-center mb-16">

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Menu, X } from "lucide-react"; // Icons
 import logo from "@/assets/logo/logo.png";
-
+import { Facebook ,Instagram,Youtube,MessageCircleCode} from "lucide-react";
 interface PublicLayoutProps {
   children: ReactNode;
 }
@@ -160,24 +160,40 @@ export const PublicLayout = ({ children }: PublicLayoutProps) => {
         </ul>
 
         {/* Social Media Icons */}
-        <div className="flex justify-center md:justify-start gap-4">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
-             className="w-9 h-9 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition">
-            <i className="fab fa-facebook-f text-[#c2a25e] hover:text-white"></i>
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-             className="w-9 h-9 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition">
-            <i className="fab fa-instagram text-[#c2a25e] hover:text-white"></i>
-          </a>
-          <a href="https://wa.me/919819837579" target="_blank" rel="noopener noreferrer"
-             className="w-9 h-9 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition">
-            <i className="fab fa-whatsapp text-[#c2a25e] hover:text-white"></i>
-          </a>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer"
-             className="w-9 h-9 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition">
-            <i className="fab fa-youtube text-[#c2a25e] hover:text-white"></i>
-          </a>
-        </div>
+         <div className="flex justify-center md:justify-start gap-4">
+    <a
+      href="https://facebook.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-10 h-10 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition transform hover:scale-110"
+    >
+      <Facebook className="text-[#c2a25e] hover:text-white text-lg" />
+    </a>
+    <a
+      href="https://instagram.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-10 h-10 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition transform hover:scale-110"
+    >
+      <Instagram className="text-[#c2a25e] hover:text-white text-lg" />
+    </a>
+    <a
+      href="https://wa.me/919819837579"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-10 h-10 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition transform hover:scale-110"
+    >
+      <MessageCircleCode className="text-[#c2a25e] hover:text-white text-lg" />
+    </a>
+    <a
+      href="https://youtube.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-10 h-10 flex items-center justify-center bg-[#c2a25e]/10 hover:bg-[#c2a25e] rounded-full transition transform hover:scale-110"
+    >
+      <Youtube className="text-[#c2a25e] hover:text-white text-lg" />
+    </a>
+  </div>
       </div>
     </div>
 
