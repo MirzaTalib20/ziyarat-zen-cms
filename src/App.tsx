@@ -19,7 +19,7 @@ import { ContactEditor } from './pages/cms/ContactEditor';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ui/ScrollToTop";
-import PackageDetails from "./pages/public/PackageDetails";
+import {PackageDetails} from "./pages/public/PackageDetails";
 
 const queryClient = new QueryClient();
 

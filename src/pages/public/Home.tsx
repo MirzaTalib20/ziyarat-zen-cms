@@ -265,7 +265,7 @@ const cardVariants = {
       </div>
     </section>
         {/* Packages Preview */}
-        <section ref={targetSectionRef} className="py-20 bg-background">
+        <section ref={targetSectionRef} className=" overflow-hidden py-20 bg-background">
           <div className="container mx-auto px-4 sm:px-6">
             {/* Title */}
             <div className="text-center mb-12">
@@ -278,11 +278,11 @@ const cardVariants = {
             </div>
 
             {/* Carousel */}
-            <div className="" ref={emblaRef}>
+            <div className="" ref={packagesemblaRef}>
               <div className="flex gap-5 sm:gap-6">
                 {packages.map((pkg) => (
                   <div
-                    key={pkg._id}
+                    key={pkg.id}
                     className="
                   flex-[0_0_100%] 
                   sm:flex-[0_0_45%] 
@@ -300,7 +300,7 @@ const cardVariants = {
                     {/* Image */}
                     <div className="relative">
                       <img
-                        src={pkg.imageUrl || "/placeholder.jpg"}
+                        src={pkg.image_url || "/placeholder.jpg"}
                         alt={pkg.title}
                         className="w-full h-44 sm:h-48 md:h-52 object-cover rounded-2xl"
                       />
@@ -346,7 +346,7 @@ const cardVariants = {
                         </div>
                       </div>
 
-                      <Link to={`/packageDetails/${pkg._id}`}>
+                      <Link to={`/packageDetails/${pkg.id}`}>
                         <button className="w-full btext-white text-sm font-medium py-2 bg-gradient-to-br mt-4 from-yellow-500 to-amber-600 text-white rounded-full shadow-lg hover:shadow-xl hover:from-yellow-600 hover:to-amber-700 transition-all rounded-full shadow-md transition">
                           View Details
                         </button>
