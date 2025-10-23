@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,42 +13,74 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (user) {
-      navigate('/');
-    }
-  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { error } = isSignUp 
-        ? await signUp(email, password)
-        : await signIn(email, password);
+      if (isSignUp) {
+        // 🔹 Sign up logic
+        const { data: existingUser } = await supabase
+          .from('users')
+          .select('email')
+          .eq('email', email)
+          .single();
 
-      if (error) {
-        toast({
-          title: 'Error',
-          description: error.message,
-          variant: 'destructive',
-        });
+        if (existingUser) {
+          toast({
+            title: 'Error',
+            description: 'Email already exists',
+            variant: 'destructive',
+          });
+        } else {
+          const { error } = await supabase
+            .from('users')
+            .insert([{ email, password }]);
+
+          if (error) throw error;
+
+          toast({
+            title: 'Account created!',
+            description: 'You can now sign in.',
+          });
+          setIsSignUp(false);
+        }
       } else {
-        toast({
-          title: 'Success',
-          description: isSignUp ? 'Account created successfully!' : 'Logged in successfully!',
-        });
-        navigate('/');
+        // 🔹 Login logic
+       const { data: user, error } = await supabase
+        .from('users')
+        .select('id, email, name, role') // explicitly include role
+        .eq('email', email)
+        .eq('password', password)
+        .single();
+
+        if (error || !user) {
+          toast({
+            title: 'Invalid credentials',
+            description: 'Email or password is incorrect',
+            variant: 'destructive',
+          });
+        } else {
+          localStorage.setItem('user', JSON.stringify(user));
+          console.log(user.role)
+          toast({
+            title: 'Welcome back!',
+            description: 'Logged in successfully',
+          });
+           if (user.role === 'admin') {
+    navigate('/cms'); // admin → CMS
+  } else {
+    navigate('/'); // normal user → homepage
+  }
+        }
       }
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'An unexpected error occurred',
+        description: 'Something went wrong. Try again.',
         variant: 'destructive',
       });
     } finally {

@@ -7,11 +7,8 @@ import {
   MessageSquare, 
   Settings 
 } from 'lucide-react';
-
+import logo from "@/assets/logo/logo.png";
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/cms' },
-  { icon: FileText, label: 'Home Page', path: '/cms/pages' },
-  { icon: FileText, label: 'About Page', path: '/cms/about' },
   { icon: Package, label: 'Packages', path: '/cms/packages' },
   { icon: Image, label: 'Gallery', path: '/cms/gallery' },
   { icon: MessageSquare, label: 'Contact', path: '/cms/contact' },
@@ -27,9 +24,13 @@ export const CMSSidebar = () => {
       <div className="h-16 flex items-center justify-center border-b border-sidebar-border">
         <div className="flex flex-col items-center">
           <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center mb-1">
-            <span className="text-white text-lg font-bold">Z</span>
+             <img
+                              src={logo}
+                              alt="Ar-Rahman Logo"
+                              className="w-14 h-14 object-contain"
+                            />
           </div>
-          <span className="text-primary font-serif text-sm">Ziyarat Tours</span>
+          <span className="text-primary font-serif text-sm">Ar Rahman Tours</span>
         </div>
       </div>
       

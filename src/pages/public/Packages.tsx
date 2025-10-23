@@ -217,7 +217,7 @@ export const Packages = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {paginatedPackages.map((pkg) => (
                 <div
-                  key={pkg._id}
+                  key={pkg.id}
                   className="bg-white flex-[0_0_100%] 
                   sm:flex-[0_0_45%] 
                   md:flex-[0_0_30%] 
@@ -233,7 +233,7 @@ export const Packages = () => {
                   {/* Image */}
                   <div className="relative">
                     <img
-                      src={pkg.imageUrl || "/placeholder.jpg"}
+                      src={pkg.image_url || "/placeholder.jpg"}
                       alt={pkg.title}
                       className="w-full h-48 object-cover rounded-2xl"
                     />
@@ -278,7 +278,7 @@ export const Packages = () => {
                       </div>
                     </div>
 
-                    <Link to={`/packages/${pkg._id}`}>
+                    <Link to={`/packages/${pkg.id}`}>
                       <Button className="w-full text-white text-sm font-medium py-2 bg-gradient-to-br from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 rounded-full shadow-md transition">
                         View Details
                       </Button>

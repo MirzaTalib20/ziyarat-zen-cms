@@ -44,7 +44,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             
             {/* CMS Routes - Protected */}
-            <Route path="/cms" element={<Navigate to="/cms/pages" replace />} />
+            <Route path="/cms" element={<Navigate to="/cms/packages" replace />} />
             <Route path="/cms/pages" element={<ProtectedRoute requireAdmin><HomeEditor /></ProtectedRoute>} />
             <Route path="/cms/about" element={<ProtectedRoute requireAdmin><AboutEditor /></ProtectedRoute>} />
             <Route path="/cms/gallery" element={<ProtectedRoute requireAdmin><GalleryEditor /></ProtectedRoute>} />

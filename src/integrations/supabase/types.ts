@@ -14,85 +14,86 @@ export type Database = {
   };
   public: {
     Tables: {
-      user_roles: {
+      users: {
         Row: {
-          created_at: string | null;
           id: string;
-          role: Database["public"]["Enums"]["app_role"];
-          user_id: string;
+          name: string | null;
+          email: string;
+          password: string;
+          role: Database["public"]["Enums"]["app_role"]; // 'admin' | 'user'
+          created_at: string | null;
+          updated_at: string | null;
         };
         Insert: {
-          created_at?: string | null;
           id?: string;
+          name?: string | null;
+          email: string;
+          password: string;
           role?: Database["public"]["Enums"]["app_role"];
-          user_id: string;
-        };
-        Update: {
           created_at?: string | null;
-          id?: string;
-          role?: Database["public"]["Enums"]["app_role"];
-          user_id?: string;
+          updated_at?: string | null;
         };
+        Update: Partial<Database["public"]["Tables"]["users"]["Insert"]>;
         Relationships: [];
       };
 
       // ✅ Move packages here inside Tables
       packages: {
         Row: {
-           id: string;
-    title: string | null;
-    description: string | null;
-    location: string | null;
-    price: number | null;
-    duration: string | null;
-    category: string | null;
-    featured: boolean | null;
-    dates: string | null;
-    image_url: string | null;
-    itinerary: string[] | null;
-    inclusions: string[] | null;
-    exclusions: string[] | null;
-    accommodations: {
-  hotel_name: string;
-  city: string;
-  rating?: number;
-  amenities?: string[];
-  description?: string;
-}[];
-    key_locations: string[] | null;
-    created_at: string | null;
-    updated_at: string | null;
+          id: string;
+          title: string | null;
+          description: string | null;
+          location: string | null;
+          price: number | null;
+          duration: string | null;
+          category: string | null;
+          featured: boolean | null;
+          dates: string | null;
+          image_url: string | null;
+          itinerary: string[] | null;
+          inclusions: string[] | null;
+          exclusions: string[] | null;
+          accommodations: {
+            hotel_name: string;
+            city: string;
+            rating?: number;
+            amenities?: string[];
+            description?: string;
+          }[];
+          key_locations: string[] | null;
+          created_at: string | null;
+          updated_at: string | null;
         };
         Insert: {
-           id?: string;
-    title?: string | null;
-    description?: string | null;
-    location?: string | null;
-    price?: number | null;
-    duration?: string | null;
-    category?: string | null;
-    featured?: boolean | null;
-    dates?: string | null;
-    image_url?: string | null;
-    itinerary?: string[] | null;
-    inclusions?: string[] | null;
-    exclusions?: string[] | null;
-    accommodations: {
-  hotel_name: string;
-  city: string;
-  rating?: number;
-  amenities?: string[];
-  description?: string;
-}[];
-    key_locations?: string[] | null;
-    created_at?: string | null;
-    updated_at?: string | null;
+          id?: string;
+          title?: string | null;
+          description?: string | null;
+          location?: string | null;
+          price?: number | null;
+          duration?: string | null;
+          category?: string | null;
+          featured?: boolean | null;
+          dates?: string | null;
+          image_url?: string | null;
+          itinerary?: string[] | null;
+          inclusions?: string[] | null;
+          exclusions?: string[] | null;
+          accommodations: {
+            hotel_name: string;
+            city: string;
+            rating?: number;
+            amenities?: string[];
+            description?: string;
+          }[];
+          key_locations?: string[] | null;
+          created_at?: string | null;
+          updated_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["packages"]["Insert"]>;
         Relationships: [];
       };
       // ✅ Move destinations here inside Tables
-destinations: {
+      destinations: {
         Row: {
           _id: string;
           title: string;
@@ -100,9 +101,10 @@ destinations: {
           imagebase64: string;
           categories: PathString | null;
           services: string[] | null;
-          featured :boolean | null;
-          createdAt: string | null;
-          updatedAt: string | null;
+          type: string | null;
+          featured: boolean | null;
+          createdat: string | null;
+          updatedat: string | null;
         };
         Insert: {
           _id?: string;
@@ -110,10 +112,11 @@ destinations: {
           description?: string | null;
           imageBase64: string;
           categories?: string | null;
-          featured :boolean | null;
+          featured: boolean | null;
           services?: string[] | null;
-          createdAt?: string | null;
-          updatedAt?: string | null;
+          createdat?: string | null;
+          updatedat?: string | null;
+           type: string | null;
         };
         Update: {
           _id?: string;
@@ -121,14 +124,48 @@ destinations: {
           description?: string | null;
           imageBase64?: string;
           categories?: string | null;
-          featured :boolean | null;
+          featured: boolean | null;
           services?: string[] | null;
-          createdAt?: string | null;
-          updatedAt?: string | null;
+          createdat?: string | null;
+          updatedat?: string | null;
+           type: string | null;
         };
         Relationships: [];
       };
 
+      home: {
+        Row: {
+          id: string;
+          headline: string | null;
+          subheading: string | null;
+          background_media: string | null;
+          media_type: 'image' | 'video' | null;
+          cta_buttons: { id: string; text: string; link: string }[] | null;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          headline?: string | null;
+          subheading?: string | null;
+          background_media?: string | null;
+          media_type?: 'image' | 'video' | null;
+          cta_buttons?: { id: string; text: string; link: string }[] | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Update: Partial<{
+          id: string;
+          headline: string | null;
+          subheading: string | null;
+          background_media: string | null;
+          media_type: 'image' | 'video' | null;
+          cta_buttons: { id: string; text: string; link: string }[] | null;
+          created_at: string | null;
+          updated_at: string | null;
+        }>;
+        Relationships: [];
+      };
     };
 
     Views: {

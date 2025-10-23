@@ -8,8 +8,10 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
-  const { user, isAdmin, loading } = useAuth();
+  const { loading } = useAuth();
+  const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
 
+  // While loading
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -21,13 +23,17 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
     );
   }
 
-  if (!user) {
+  // Not logged in
+  if (!storedUser) {
     return <Navigate to="/login" replace />;
   }
 
+  // Admin check
+  const isAdmin = storedUser.role === 'admin';
   if (requireAdmin && !isAdmin) {
-    return <Navigate to="/cms" replace />;
+    return <Navigate to="/" replace />; // non-admins go home
   }
 
   return <>{children}</>;
 };
+
